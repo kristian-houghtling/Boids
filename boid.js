@@ -11,12 +11,15 @@ class Boid {
     // 2. Create a function called update() that updates the position of the boid.
     update() {
         this.velocity.add(this.acceleration);
+        this.velocity.limit(5);
         this.position.add(this.velocity);
         this.acceleration.mult(0);
+        this.wrap();
     }
 
     // 3. Create a function called applyForce() that adds a force to the acceleration.
     applyForce(force) {
+
         this.acceleration.add(force);
     }
 
@@ -25,7 +28,7 @@ class Boid {
         let desired = p5.Vector.sub(target, this.position);
         desired.setMag(1);
         let steer = p5.Vector.sub(desired, this.velocity);
-        steer.limit(0.1);
+        steer.limit(.1);
         this.applyForce(steer);
     }
 
@@ -55,6 +58,20 @@ class Boid {
         noStroke();
         triangle(-this.size, -this.size, this.size, 0, -this.size, this.size);
         pop();
+    }
+
+    //method to wrap the boid around the screen
+    wrap() {
+        if (this.position.x > width) {
+            this.position.x = 0;
+        } else if (this.position.x < 0) {
+            this.position.x = width;
+        }
+        if (this.position.y > height) {
+            this.position.y = 0;
+        } else if (this.position.y < 0) {
+            this.position.y = height;
+        }
     }
 
 
